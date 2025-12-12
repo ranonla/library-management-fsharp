@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="models\BookModel.fs" />
+    <Compile Include="storage\BookManager.fs" />
     <Compile Include="Library.fs" />
   </ItemGroup>
 
