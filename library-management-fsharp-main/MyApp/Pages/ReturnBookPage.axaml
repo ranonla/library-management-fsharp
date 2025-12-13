@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MyApp.Pages.ReturnBookPage">
+
+    <UserControl.Styles>
+    <Style Selector="Button.Action"> 
+        <Setter Property="Background" Value="{StaticResource ButtonActionPointerOver}"/>
+    </Style>
+    <!-- HOVER -->
+    <Style Selector="Button.Action:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#6ad3b7ff"/>
+    </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header -->
+        <TextBlock Text="Return Book"
+                   Grid.Row="0"
+                   FontSize="30"
+                   FontWeight="Bold"
+                   Foreground="Pink"
+                   Margin="20 20 0 0"/>
+
+        <StackPanel Grid.Row="1" Spacing="10" Margin="20" HorizontalAlignment="Left">
+            <TextBox x:Name="TextBox"
+                     Width="500"
+                     Watermark="Enter a valid title, or ID..."/>
+            
+            <TextBlock x:Name="MessageText"
+                    FontSize="16"
+                    Foreground="LightGreen"
+                    Margin="0"/>
+
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button
+                x:Name="ReturnButton"
+                Content="Return"
+                Width="100"
+                Classes="Action"/>
+                <Button Content="Cancle"
+                        Width="100"
+                        Classes="Action"
+                        x:Name="CancelButton"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Button Grid.Row="2"
+                x:Name="BackButton"
+                Content="←"
+                HorizontalAlignment="Left"
+                FontSize="26"
+                Width="60"
+                Margin="10"/>
+    </Grid>
+
+</UserControl>
