@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MyApp.Pages.HomePage">
+<UserControl.Styles>
+
+    <!-- Base style -->
+    <Style Selector="Button.Main">
+        <Setter Property="Theme" Value="{x:Null}"/>
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Background" Value="{StaticResource ButtonMainBg}"/>
+    </Style>
+
+    <!-- HOVER FIX -->
+    <Style Selector="Button.Main:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource ButtonMainPointerOver}"/>
+    </Style>
+
+    <!-- PRESSED FIX -->
+    <Style Selector="Button.Main:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource ButtonMainPressed}"/>
+    </Style>
+
+</UserControl.Styles>
+
+
+
+
+    <!-- MAIN RESPONSIVE GRID -->
+    <Grid RowDefinitions="Auto,*,Auto" Margin="30">
+
+        <!-- Top Header -->
+        <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0 0 0 20">
+            <TextBlock Text="Welcome To"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="White"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            <TextBlock Text="Our Library Management System"
+                       FontSize="22"
+                       Foreground="Pink"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Image -->
+        <Grid Grid.Row="1">
+            <Image Source="avares://MyApp/assets/1.png"
+                   Stretch="Uniform"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   MaxWidth="650"
+                   MaxHeight="450"
+                   Margin="0 0 0 2"/>
+        </Grid>
+
+        <!-- Pages Buttons -->
+        <StackPanel Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Margin="0 0 0 100">
+
+            <TextBlock Text="Are you a librarian or visitor?"
+                       FontSize="22"
+                       Margin="0 0 0 10"
+                       HorizontalAlignment="Center"/>
+
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="LibrarianButton"
+                        Classes="Main"
+                        Content="Librarian"/>
+
+                <Button x:Name="VisitorButton"
+                        Classes="Main"
+                        Content="Visitor"/>
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+
+</UserControl>
