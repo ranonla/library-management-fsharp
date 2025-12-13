@@ -64,15 +64,15 @@ module BookManager =
                     Id = Guid.Parse(reader.GetString(0))
                     Title = reader.GetString(1)
                     Author = reader.GetString(2)
-                    Status = stringToStatus (reader.GetString(3))
+                    Status = stringToStatus(reader.GetString(3))
                 }
 
             list |> Seq.toList
         )
 
     let searchBooks (query: string) : Book list =
-        let books = getAllBooks()
         let q = query.ToLower()
+        let books = getAllBooks()
 
         match Guid.TryParse(query) with
         | true, guid ->
@@ -80,9 +80,9 @@ module BookManager =
         | _ ->
             books
             |> List.filter (fun b ->
-                b.Title.ToLower().StartsWith(q) ||
-                b.Author.ToLower().StartsWith(q)
-        )
+                b.Title.ToLower().Contains(q) ||
+                b.Author.ToLower().Contains(q)
+            )
 
     let updateBookTitle (id: Guid) (newTitle: string) =
         useConnection (fun conn ->
@@ -119,21 +119,17 @@ module BookManager =
             cmd.ExecuteNonQuery() |> ignore
         )
 
-    let tryFindBook (query: string) : Book option =
+    let tryFindBookByIdOrTitle (query: string) : Book option =
+        let q = query.ToLower()
         let books = getAllBooks()
 
         match Guid.TryParse(query) with
         | true, guid ->
             books |> List.tryFind (fun b -> b.Id = guid)
         | _ ->
-            let q = query.ToLower()
-            books
-            |> List.tryFind (fun b ->
-                b.Title.ToLower().StartsWith(q)
-        )
-
+            books |> List.tryFind (fun b -> b.Title.ToLower() = q)
     let deleteBookByQuery (query: string) : string option =
-        match tryFindBook query with
+        match tryFindBookByIdOrTitle query with
         | Some book ->
             deleteBook book.Id
             Some "Book deleted successfully!"
@@ -141,7 +137,7 @@ module BookManager =
             Some "Book not found."
 
     let borrowBook (id: Guid) : string option =
-        match tryFindBook (id.ToString()) with
+        match getAllBooks() |> List.tryFind (fun b -> b.Id = id) with
         | None -> Some "Book not found."
         | Some book ->
             match book.Status with
@@ -151,12 +147,17 @@ module BookManager =
                 Some "Book borrowed successfully!"
 
     let borrowBookByQuery (query: string) : string option =
-        match tryFindBook query with
-        | Some book -> borrowBook book.Id
+        match tryFindBookByIdOrTitle query with
         | None -> Some "Book not found."
+        | Some book ->
+            match book.Status with
+            | Borrowed -> Some "Book is already borrowed."
+            | Available ->
+                updateStatus book.Id BookStatus.Borrowed
+                Some "Book borrowed successfully!"
 
     let returnBook (id: Guid) : string option =
-        match tryFindBook (id.ToString()) with
+        match getAllBooks() |> List.tryFind (fun b -> b.Id = id) with
         | None -> Some "Book not found."
         | Some book ->
             match book.Status with
@@ -166,7 +167,11 @@ module BookManager =
                 Some "Book returned successfully!"
 
     let returnBookByQuery (query: string) : string option =
-        match tryFindBook query with
-        | Some book -> returnBook book.Id
+        match tryFindBookByIdOrTitle query with
         | None -> Some "Book not found."
-
+        | Some book ->
+            match book.Status with
+            | Available -> Some "Book is already available."
+            | Borrowed ->
+                updateStatus book.Id BookStatus.Available
+                Some "Book returned successfully!"
